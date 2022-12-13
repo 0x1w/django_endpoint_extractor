@@ -34,6 +34,8 @@ class Target:
         endpoints = []
         soup = self.get_soup(path)
         info_div = soup.find(id="info")
+        if not info_div:
+            return False
         lis = info_div.find_all("li")
         for li in lis:
             path = li.get_text()
@@ -41,6 +43,12 @@ class Target:
                 path = '/' + path.replace('\n', '').replace(' ', '')
                 endpoints.append(Endpoint(path, self.get_full_url(path)))
         return endpoints
+
+    def is_valid(self):
+        # faster than call get_endpoints
+        soup = self.get_soup(self._start_path)
+        info_div = soup.find(id="info")
+        return bool(info_div)
 
     def _parse_endpoints_recursive(self, path, found, prefix):
         endpoints = self.get_endpoints(path)
