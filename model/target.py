@@ -11,17 +11,17 @@ from view import info
 class Target:
     _host = None
     _start_path = None
-    _save_pt = None
+    _outfile = None
 
     start_time = None  # analytics
     endpoints_total = {}  # analytics
     delay = 0
 
-    def __init__(self, url, save_pt, delay):
+    def __init__(self, url, outfile, delay):
         urlp = urlparse(url)
         self._host = f"{urlp[0]}://{urlp[1]}"
         self._start_path = urlp.path
-        self._save_pt = save_pt
+        self._outfile = outfile
         self.delay = delay
 
     def get_full_url(self, path):
@@ -67,8 +67,8 @@ class Target:
                     if "Allow" in resp.headers:
                         ep.set_allowed_methods(resp.headers["Allow"])  # allowed methods will be displayed to user
                     ep.set_status_code(status_code)  # will be displayed to user
-                if self._save_pt:
-                    ep.save(self._save_pt)  # saving endpoint to results file
+                if self._outfile:
+                    ep.save(self._outfile)  # saving endpoint to outfile
                 info(f"Found endpoint: {prefix}{ep}")
                 if ep.status_code not in self.endpoints_total:
                     self.endpoints_total[ep.status_code] = 0

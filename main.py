@@ -26,7 +26,7 @@ def main():
     args = parser.parse_args()
 
     url = args.url
-    save_pt = args.out
+    outfile = args.out
     resp = None
 
     try:
@@ -43,15 +43,15 @@ def main():
     if resp.status_code != 404:
         exit_error(f"{url} - It's not a 404 page URL")
 
-    if save_pt:  # clear results file if exists
-        save_pt.write_text("")
+    if outfile:  # clear if passed
+        outfile.write_text("")
 
-    target = Target(url, save_pt, args.delay)
+    target = Target(url, outfile, args.delay)
     if target.is_valid():
         target.parse_endpoints()
     else:
         exit_error("Target invalid")
-        
+
     print(f"{'=' * 20}\nTime of work: {int(time.time() - target.start_time)} sec\n")
     total = 0
     ep_total = target.endpoints_total
