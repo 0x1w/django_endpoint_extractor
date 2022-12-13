@@ -7,11 +7,13 @@ class Endpoint:
     _url = None  # need for displaying and logging url cos its more useful for user than path
     _allowed_methods = "unknown"
 
-    status_code = "testing"
+    status_code = 0
+    node_depth = 0
 
-    def __init__(self, path, url):
+    def __init__(self, path, url, depth):
         self._path = path
         self._url = url
+        self.node_depth = depth
 
     @property
     def has_pattern(self):  # more about patterns https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -40,7 +42,7 @@ class Endpoint:
 
     def save(self, results_pt):
         if self.status_code == 404:
-            return  # don't save endpoint directory
+            return  # don't save endpoints node
         with open(results_pt, 'a') as results:
             results.write(str(self) + "\n")
             results.close()
