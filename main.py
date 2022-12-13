@@ -1,17 +1,15 @@
 #!/bin/python3
 
 import time
-from os.path import basename
+from pathlib import Path
 
 import requests
-from sys import argv
-
 from requests.exceptions import MissingSchema, ConnectionError, InvalidSchema, InvalidURL
 
 from model.target import Target
 from view import error
 
-DELAY = 0.3
+import argparse
 
 
 def exit_error(msg):
@@ -20,23 +18,16 @@ def exit_error(msg):
 
 
 def main():
-    global DELAY
-    argc = len(argv)
-    if argc < 2:
-        example = "https://example.com/404_page"
-        pname = basename(argv[0])
-        exit_error(
-            f'''Please, provide 404 page URL
-Usage: python3 {pname} {example} 
-       python3 {pname} {example} results.txt       
-        ''')
+    parser = argparse.ArgumentParser(
+        description='Recursive extract all endpoints from Django 404-page debug information')
+    parser.add_argument("url", type=str, help="an url of the 404 page with debug information")
+    parser.add_argument("-o", "--out", type=Path, metavar="PATH", help="an path to the output file", default=None)
+    parser.add_argument("-d", "--delay", type=float, help="delay per request", default=0.3)
+    args = parser.parse_args()
 
-    url = argv[1]
-    save_pt = None
+    url = args.url
+    save_pt = Path(args.out)
     resp = None
-
-    if argc > 2:
-        save_pt = argv[2]
 
     try:
         resp = requests.get(url)
@@ -52,22 +43,10 @@ Usage: python3 {pname} {example}
     if resp.status_code != 404:
         exit_error(f"{url} - It's not a 404 page URL")
 
-    if save_pt:  # clear results file
-        f = open(save_pt, 'w')
-        f.close()
+    if save_pt:  # clear results file if exists
+        save_pt.write_text("")
 
-    delay_msg = "Enter delay (Leave blank to use 0.3): "
-    delay = input(delay_msg)
-    while delay:
-        try:
-            if delay:
-                DELAY = float(delay)
-            break
-        except ValueError:
-            error("Invalid delay value, try again...")
-            delay = input(delay_msg)
-
-    target = Target(url, save_pt, DELAY)
+    target = Target(url, save_pt, args.delay)
     target.parse_endpoints()
 
     print(f"{'=' * 20}\nTime of work: {int(time.time() - target.start_time)} sec\n")
