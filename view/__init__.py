@@ -18,8 +18,8 @@ def display_results(counters, start_time):
         endpoints_cnt = counters[status_code]
         endpoints_total += endpoints_cnt
         print(f"{status_code} Endpoints: {endpoints_cnt}")
-    if 0 in counters:  # 0 is default request status code value for testing endpoints
-        print(f"Endpoints that need test: {counters[0]}")
+    if 0 in counters:  # 0 is default request status code value for fuzzing endpoints
+        print(f"Endpoints that need fuzzing: {counters[0]}")
     print(f"\nTotal number of endpoints: {endpoints_total}")
 
 

@@ -35,10 +35,10 @@ class Endpoint:
         return self.path == other.path
 
     def __str__(self):
-        need_test = ""
+        need_fuzzing = ""
         if self.has_pattern:
-            need_test = "(NEED TESTING)"
-        return f"{self._url} ({self._allowed_methods}) => {self.status_code} {need_test}"
+            need_fuzzing = "(NEED FUZZING)"
+        return f"{self._url} ({self._allowed_methods}) => {self.status_code} {need_fuzzing}"
 
     def save(self, results_pt):
         if self.status_code == 404:
