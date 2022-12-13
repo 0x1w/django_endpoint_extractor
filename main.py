@@ -26,7 +26,7 @@ def main():
     args = parser.parse_args()
 
     url = args.url
-    save_pt = Path(args.out)
+    save_pt = args.out
     resp = None
 
     try:
@@ -47,8 +47,11 @@ def main():
         save_pt.write_text("")
 
     target = Target(url, save_pt, args.delay)
-    target.parse_endpoints()
-
+    if target.is_valid():
+        target.parse_endpoints()
+    else:
+        exit_error("Target invalid")
+        
     print(f"{'=' * 20}\nTime of work: {int(time.time() - target.start_time)} sec\n")
     total = 0
     ep_total = target.endpoints_total
