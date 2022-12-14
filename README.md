@@ -1,5 +1,5 @@
-## About
-Recursive extract all endpoints from Django 404-page debug information
+## django_endpoint_extractor
+A simple python script to get all endpoints from django 404 page with debug information presented
 
 
 ## Installation
