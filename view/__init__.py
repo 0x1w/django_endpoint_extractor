@@ -13,13 +13,10 @@ def display_results(counters, start_time):
     print(f"{'=' * 20}\nTime of work: {int(time.time() - start_time)} sec\n")
     endpoints_total = 0
     for status_code in counters:
-        if not status_code:
-            continue
         endpoints_cnt = counters[status_code]
         endpoints_total += endpoints_cnt
-        print(f"{status_code} Endpoints: {endpoints_cnt}")
-    if 0 in counters:  # 0 is default request status code value for fuzzing endpoints
-        print(f"Endpoints that need fuzzing: {counters[0]}")
+        # 0 is default request status code value for fuzzing endpoints
+        print(f"{status_code or 'Need Fuzzing'} Endpoints: {endpoints_cnt}")
     print(f"\nTotal number of endpoints: {endpoints_total}")
 
 
