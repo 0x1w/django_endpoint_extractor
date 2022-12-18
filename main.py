@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import requests
+from model import network
 from requests.exceptions import MissingSchema, ConnectionError, InvalidSchema, InvalidURL
 
 from model.target import Target
@@ -19,7 +19,7 @@ def exit_error(msg):
 def check_url(url):
     resp = None
     try:
-        resp = requests.get(url)
+        resp = network.session.get(url)
     except MissingSchema:
         exit_error("No schema supplied!")
     except InvalidSchema:
@@ -56,7 +56,5 @@ def main():
     display_results(target.endpoint_counters, target.start_time)
 
     
-
-
 if __name__ == "__main__":
     main()

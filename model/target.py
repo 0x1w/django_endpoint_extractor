@@ -1,7 +1,7 @@
 import time
 from urllib.parse import urlparse
 
-import requests
+from model import network
 from bs4 import BeautifulSoup
 
 from model.endpoint import Endpoint
@@ -28,7 +28,7 @@ class Target:
         return f"{self._host}{path}"
 
     def get_soup(self, path):
-        return BeautifulSoup(requests.get(self.get_full_url(path)).content, "html.parser")
+        return BeautifulSoup(network.session.get(self.get_full_url(path)).content, "html.parser")
 
     def get_endpoints(self, path, depth):
         endpoints = []
@@ -58,7 +58,7 @@ class Target:
             if ep not in found:
                 # found - already found endpoints, we need it to filter new endpoints from 'endpoints node' listing
                 if not ep.has_pattern:
-                    resp = requests.get(self.get_full_url(ep.path))
+                    resp = network.session.get(self.get_full_url(ep.path))
                     time.sleep(self.delay)  # waf prevention
                     status_code = resp.status_code
                     if status_code == 404:  # there is more endpoints in this path, so we need to parse it directly
