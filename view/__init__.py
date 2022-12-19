@@ -9,6 +9,11 @@ def display_error(msg):
     print(f"[ERROR] {msg}")
 
 
+def exit_error(msg):
+    display_error(msg)
+    exit(-1)
+
+
 def display_results(counters, start_time):
     print(f"{'=' * 20}\nTime of work: {int(time.time() - start_time)} sec\n")
     endpoints_total = 0

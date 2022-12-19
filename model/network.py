@@ -1,5 +1,6 @@
 from requests import Session
 import urllib3
+from urllib3.exceptions import InsecureRequestWarning
 
 
 class CustomSession(Session):
@@ -8,5 +9,5 @@ class CustomSession(Session):
         self.verify = False
 
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+urllib3.disable_warnings(InsecureRequestWarning)
 session = CustomSession()

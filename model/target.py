@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from model.endpoint import Endpoint
 from view import display_endpoint, display_endpoint_node
+from model import config
 
 
 class Target:
@@ -17,7 +18,11 @@ class Target:
     endpoint_counters = {}  # analytics
     delay = 0
 
-    def __init__(self, url, outfile, delay):
+    def __init__(self):
+        url = config.running.url
+        outfile = config.running.outfile
+        delay = config.running.delay
+
         urlp = urlparse(url)
         self._host = f"{urlp[0]}://{urlp[1]}"
         self._start_path = urlp.path

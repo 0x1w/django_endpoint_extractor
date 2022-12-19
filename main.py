@@ -1,36 +1,10 @@
 #!/bin/python3
 
 from pathlib import Path
-
-from model import network
-from requests.exceptions import MissingSchema, ConnectionError, InvalidSchema, InvalidURL
-
 from model.target import Target
-from view import display_error, display_results
-
+from view import display_results, exit_error
+from model import config
 import argparse
-
-
-def exit_error(msg):
-    display_error(msg)
-    exit(-1)
-
-
-def check_url(url):
-    resp = None
-    try:
-        resp = network.session.get(url)
-    except MissingSchema:
-        exit_error("No schema supplied!")
-    except InvalidSchema:
-        exit_error(f"Invalid schema supplied '{url.split('://')[0]}' ")
-    except InvalidURL:
-        exit_error(f"Invalid URL: {url}")
-    except ConnectionError:
-        exit_error("Can't connect to the target!")
-
-    if resp.status_code != 404:
-        exit_error(f"{url} - It's not a 404 page URL")
 
 
 def main():
@@ -41,20 +15,17 @@ def main():
     parser.add_argument("-d", "--delay", type=float, help="delay per request", default=0.3)
     args = parser.parse_args()
 
-    url = args.url
-    outfile = args.out
+    config.running = config.RunningConfig(args)
 
-    check_url(url)
-    if outfile:  # clear if passed
-        outfile.write_text("")
+    config.running.validate_args()
 
-    target = Target(url, outfile, args.delay)
+    target = Target()
     if not target.is_valid():
         exit_error("Target invalid: check if target's debug mode is turned on")
 
     target.parse_endpoints()
     display_results(target.endpoint_counters, target.start_time)
 
-    
+
 if __name__ == "__main__":
     main()
