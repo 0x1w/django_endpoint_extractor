@@ -1,4 +1,4 @@
-## django_endpoint_extractor
+### django_endpoint_extractor
 A simple python script to get all endpoints from django 404 page with debug information presented
 
 
