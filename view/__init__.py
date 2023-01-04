@@ -17,11 +17,10 @@ def exit_error(msg):
 def display_results(counters, start_time):
     print(f"{'=' * 20}\nTime of work: {int(time.time() - start_time)} sec\n")
     endpoints_total = 0
-    for status_code in counters:
-        endpoints_cnt = counters[status_code]
-        endpoints_total += endpoints_cnt
+    for status_code, cnt in counters.items():
+        endpoints_total += cnt
         # 0 is default request status code value for fuzzing endpoints
-        print(f"{status_code or 'Need Fuzzing'} Endpoints: {endpoints_cnt}")
+        print(f"{status_code or 'Need Fuzzing'} Endpoints: {cnt}")
     print(f"\nTotal number of endpoints: {endpoints_total}")
 
 
